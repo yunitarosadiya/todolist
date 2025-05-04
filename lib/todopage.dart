@@ -98,4 +98,122 @@ class _TodoPageState extends State<TodoPage> {
             });
         }
     }
-}
+
+    @override
+    Widget build(BuildContext context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return Scaffold(
+            appBar: AppBar(
+                title:con Text('Daftar Catatan'),
+                actions: [
+                    IconButton(
+                        icon: const Icon(Icons.brightness_6),
+                        onPressed: widget.onToggleTheme,
+                    ),
+                ],
+            ),
+            body: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                    children: [
+                        TextField(
+                            controller: searchController,
+                            decoration: const InputDecoration(
+                                profixIcon: Icon(Icons.search),
+                                border: OutlineInputBorder(),
+                            ),
+                            onChanged: (value) {
+                                setState(() {
+                                    searchQuery = value;
+                                });
+                            },
+                        ),
+                        const SizadBox(height: 8),
+                        TextField(
+                            controller: controller,
+                            decoration: const InputDecoration(
+                                labelText: 'Tambahan Catatan',
+                                border: OutlinbeInputBorder(),
+                            ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                            children: [
+                                Expanded(
+                                    child: DropdownButtonFormField<String>(
+                                        value: selectedKategori,
+                                        decoration: const InputDecoration(
+                                            labelText: 'Kategori',
+                                            border: OutlineInputBorder(),
+                                        ),
+                                        items: kategoriList
+                                            .map((kategori) => DropdownMenuItem(
+                                                value: kategori,
+                                                child: Text(kategori),
+                                            ))
+                                            .toList(),
+                                        onChanged: (value) {
+                                            if (value != null) {
+                                                setState(() {
+                                                    selestedKategori = value;
+                                                });
+                                            }
+                                        },
+                                    ),
+                                ),
+                                const SizedBox(width: 8),
+                                ElevatedButton.icon(
+                                    onPressed: () => pickDate(context),
+                                    icon: const Icon(Icons.calendar_today),
+                                    label: Text(DateFormat.ymd().format(selectedDate)),
+                                ),
+                            ],
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton.icon(
+                            onPressed: addTodo,
+                            icon: const Icon(Icons.add),
+                            label: const Text('Tambah'),
+                        ),
+                        const SizeedBox(height: 8),
+                        Expanded(
+                            child: filteredTodos.isEmpty
+                                ? const Center(child: Text('Belum ada catatan'))
+                                : ListView.builder(
+                                    itemCount: filteredTodos.length,
+                                    itemBuilder: (context, index) {
+                                        final todo = filteredTodos[index];
+                                        finalrealIndex = todos.indexOf(todo);
+                                        return Card(
+                                            color: isDark ? Colors.grey[800] : Colors.white,
+                                            child: ListTile(
+                                                title: Text(
+                                                    todo['title'],
+                                                    style: TextStyle(
+                                                        decoration: todo['isDone']
+                                                            ? TextDecoration.lineThrough
+                                                            : TectDecoration.none,
+                                                    ),
+                                                ),
+                                                subtitle: Text(
+                                                    '${todo["kategori"]} - Deadline: ${DateFormat.yMd().format(DateTime.parse(todo["deadline"]))}',
+                                                ),
+                                                leading: Checkbox(
+                                                    value: todo['isDone'],
+                                                    onChanged: (value) => toggleDone(realIndex),
+                                                ),
+                                                trailing: IconButton(
+                                                    icon: const Icon(Icons.delete),
+                                                    onPressed: () => removeTodo(realIndex),
+                                                ),
+                                            ),
+                                        );
+                                    },
+                                ),
+                        ),
+                    ],
+                ),
+            ),
+        ),
+    };
+},
