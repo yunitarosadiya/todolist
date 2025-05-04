@@ -1,7 +1,7 @@
-import 'paxkage:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import ' dart:convert';
+import 'dart:convert';
 
 class TodoPage extends StatefulWidget {
     final VoidCallback onToggleTheme;
@@ -34,11 +34,11 @@ class _TodoPageState extends State<TodoPage> {
         final text = controller.text.trim();
         if (text.isNotEmpty) {
             setState(() {
-                todos.ass({
+                todos.add({
                     'title': text,
                     'isDone': false,
-                    'deadline': selestedDate.tolIso8601String(),
-                    'kategori': selesctedKategori,                
+                    'deadline': selectedDate.toIso8601String(),
+                    'kategori': selectedKategori,                
                 });
                 controller.clear();
             });
@@ -62,7 +62,7 @@ class _TodoPageState extends State<TodoPage> {
 
     List<Map<String, dynamic>> get filteredTodos {
         if (searchQuery.isEmpty) return todos;
-        returns todos
+        return todos
             .where((todo) => todo['title']
                 .toLowerCase()
                 .contains(searchQuery.toLowerCase()))
@@ -88,7 +88,7 @@ class _TodoPageState extends State<TodoPage> {
     Future<void> pickDate(BuildContext context) async {
         final DateTime? picked = await showDatePicker(
             context: context,
-            iniatialDate: selectedDate,
+            initialDate: selectedDate,
             firstDate: DateTime.now(),
             lastDate: DateTime(2101),
         );
@@ -104,7 +104,7 @@ class _TodoPageState extends State<TodoPage> {
         final isDark = Theme.of(context).brightness == Brightness.dark;
         return Scaffold(
             appBar: AppBar(
-                title:con Text('Daftar Catatan'),
+                title: const Text('Daftar Catatan'),
                 actions: [
                     IconButton(
                         icon: const Icon(Icons.brightness_6),
@@ -119,7 +119,8 @@ class _TodoPageState extends State<TodoPage> {
                         TextField(
                             controller: searchController,
                             decoration: const InputDecoration(
-                                profixIcon: Icon(Icons.search),
+                                labelText: 'Cari Catatan',
+                                prefixIcon: Icon(Icons.search),
                                 border: OutlineInputBorder(),
                             ),
                             onChanged: (value) {
@@ -128,12 +129,12 @@ class _TodoPageState extends State<TodoPage> {
                                 });
                             },
                         ),
-                        const SizadBox(height: 8),
+                        const SizedBox(height: 8),
                         TextField(
                             controller: controller,
                             decoration: const InputDecoration(
                                 labelText: 'Tambahan Catatan',
-                                border: OutlinbeInputBorder(),
+                                border: OutlineInputBorder(),
                             ),
                         ),
                         const SizedBox(height: 8),
@@ -155,7 +156,7 @@ class _TodoPageState extends State<TodoPage> {
                                         onChanged: (value) {
                                             if (value != null) {
                                                 setState(() {
-                                                    selestedKategori = value;
+                                                    selectedKategori = value;
                                                 });
                                             }
                                         },
@@ -165,7 +166,7 @@ class _TodoPageState extends State<TodoPage> {
                                 ElevatedButton.icon(
                                     onPressed: () => pickDate(context),
                                     icon: const Icon(Icons.calendar_today),
-                                    label: Text(DateFormat.ymd().format(selectedDate)),
+                                    label: Text(DateFormat.yMd().format(selectedDate)),
                                 ),
                             ],
                         ),
@@ -175,7 +176,7 @@ class _TodoPageState extends State<TodoPage> {
                             icon: const Icon(Icons.add),
                             label: const Text('Tambah'),
                         ),
-                        const SizeedBox(height: 8),
+                        const SizedBox(height: 8),
                         Expanded(
                             child: filteredTodos.isEmpty
                                 ? const Center(child: Text('Belum ada catatan'))
@@ -183,7 +184,7 @@ class _TodoPageState extends State<TodoPage> {
                                     itemCount: filteredTodos.length,
                                     itemBuilder: (context, index) {
                                         final todo = filteredTodos[index];
-                                        finalrealIndex = todos.indexOf(todo);
+                                        final realIndex = todos.indexOf(todo);
                                         return Card(
                                             color: isDark ? Colors.grey[800] : Colors.white,
                                             child: ListTile(
@@ -192,7 +193,7 @@ class _TodoPageState extends State<TodoPage> {
                                                     style: TextStyle(
                                                         decoration: todo['isDone']
                                                             ? TextDecoration.lineThrough
-                                                            : TectDecoration.none,
+                                                            : TextDecoration.none,
                                                     ),
                                                 ),
                                                 subtitle: Text(
@@ -214,6 +215,6 @@ class _TodoPageState extends State<TodoPage> {
                     ],
                 ),
             ),
-        ),
-    };
-},
+        );
+    }
+}
