@@ -99,6 +99,79 @@ class _TodoPageState extends State<TodoPage> {
         }
     }
 
+    void editTodo(int index) {
+        final todo = todos[index];
+        final TextEditingController editController = TextEditingController(text: todo['title']);
+        DateTime editDate = DateTime.parse(todo['deadline']);
+        String editKategori= todo['kategori'];
+
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                title: const Text('Edit Catatan'),
+                content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                        TextField(
+                            controller: editController,
+                            decoration: const InputDecoration(labelText: 'Judul Catatan'),
+                        ),
+                        const SizedBox(height: 8),
+                        DropdownButtonFormField<String>(
+                            value: editKategori,
+                            decoration: const InputDecoration(labelText:'Kategori'),
+                            items: kategoriList.map((kategori) => DropdownMenuItem(
+                                value: kategori,
+                                child: Text(kategori),
+                            )).toList(),
+                            onChanged: (value) {
+                                if (value != null) {
+                                    editKategori = value;
+                                }
+                            },
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton.icon(
+                            onPressed: () async {
+                                final picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: editDate,
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime(2101),
+                                );
+                                if (picked != null) {
+                                    setState(() {
+                                        editDate = picked;
+                                    });
+                                }
+                        },
+                        icon: const Icon(Icons.calendar_today),
+                        label: Text(DateFormat.yMd().format(editDate)),
+                        ),
+                    ],
+                ),
+                actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Batal'),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                            setState(() {
+                                todos[index]['title'] = editController.text.trim();
+                                todos[index]['kategori'] = editKategori;
+                                todos[index]['deadline'] = editDate.toIso8601String();
+                            });
+                            saveTodos();
+                            Navigator.pop(context);
+                        },
+                        child: const Text('Simpan'),
+                    ),
+                ],
+            ),
+        );
+    }
+
     @override
     Widget build(BuildContext context) {
         final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -203,9 +276,18 @@ class _TodoPageState extends State<TodoPage> {
                                                     value: todo['isDone'],
                                                     onChanged: (value) => toggleDone(realIndex),
                                                 ),
-                                                trailing: IconButton(
-                                                    icon: const Icon(Icons.delete),
-                                                    onPressed: () => removeTodo(realIndex),
+                                                trailing: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                        IconButton(
+                                                            icon: const Icon(Icons.edit),
+                                                            onPressed: () => editTodo(realIndex),
+                                                        ),
+                                                        IconButton(
+                                                            icon: const Icon(Icons.delete),
+                                                            onPressed: () => removeTodo(realIndex),
+                                                        ),
+                                                    ],
                                                 ),
                                             ),
                                         );
