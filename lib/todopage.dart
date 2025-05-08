@@ -5,7 +5,7 @@ import 'dart:convert';
 
 class TodoPage extends StatefulWidget {
     final VoidCallback onToggleTheme;
-
+ 
     const TodoPage({super.key, required this.onToggleTheme});
 
     @override
@@ -108,13 +108,13 @@ class _TodoPageState extends State<TodoPage> {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-                title: const Text('Edit Catatan'),
+                title: const Text('Edit Agenda'),
                 content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                         TextField(
                             controller: editController,
-                            decoration: const InputDecoration(labelText: 'Judul Catatan'),
+                            decoration: const InputDecoration(labelText: 'Agenda'),
                         ),
                         const SizedBox(height: 8),
                         DropdownButtonFormField<String>(
@@ -177,7 +177,10 @@ class _TodoPageState extends State<TodoPage> {
         final isDark = Theme.of(context).brightness == Brightness.dark;
         return Scaffold(
             appBar: AppBar(
-                title: const Text('Daftar Catatan'),
+                title: const Text(
+                    'Agenda',
+                    style: TextStyle(fontFamily: 'Tagesschrift'),
+                    ),
                 actions: [
                     IconButton(
                         icon: const Icon(Icons.brightness_6),
@@ -192,7 +195,8 @@ class _TodoPageState extends State<TodoPage> {
                         TextField(
                             controller: searchController,
                             decoration: const InputDecoration(
-                                labelText: 'Cari Catatan',
+                                labelText: 'Cari Agenda',
+                                labelStyle: TextStyle(fontFamily: 'Tagesschrift'),
                                 prefixIcon: Icon(Icons.search),
                                 border: OutlineInputBorder(),
                             ),
@@ -206,7 +210,8 @@ class _TodoPageState extends State<TodoPage> {
                         TextField(
                             controller: controller,
                             decoration: const InputDecoration(
-                                labelText: 'Tambahan Catatan',
+                                labelText: 'Tambah Agenda',
+                                labelStyle: TextStyle(fontFamily: 'Tagesschrift'),
                                 border: OutlineInputBorder(),
                             ),
                         ),
@@ -218,6 +223,7 @@ class _TodoPageState extends State<TodoPage> {
                                         value: selectedKategori,
                                         decoration: const InputDecoration(
                                             labelText: 'Kategori',
+                                            labelStyle: TextStyle(fontFamily: 'Tagesschrift'),
                                             border: OutlineInputBorder(),
                                         ),
                                         items: kategoriList
@@ -247,12 +253,18 @@ class _TodoPageState extends State<TodoPage> {
                         ElevatedButton.icon(
                             onPressed: addTodo,
                             icon: const Icon(Icons.add),
-                            label: const Text('Tambah'),
+                            label: const Text(
+                                'Tambah',
+                                style: TextStyle(fontFamily: 'Tagesschrift'),
+                                ),
                         ),
                         const SizedBox(height: 8),
                         Expanded(
                             child: filteredTodos.isEmpty
-                                ? const Center(child: Text('Belum ada catatan'))
+                                ? const Center(child: Text(
+                                    'Belum ada agenda',
+                                    style: TextStyle(fontFamily: 'Tagesschrift'),
+                                    ),)
                                 : ListView.builder(
                                     itemCount: filteredTodos.length,
                                     itemBuilder: (context, index) {
@@ -264,6 +276,7 @@ class _TodoPageState extends State<TodoPage> {
                                                 title: Text(
                                                     todo['title'],
                                                     style: TextStyle(
+                                                        fontFamily: 'Tagesschrift',
                                                         decoration: todo['isDone']
                                                             ? TextDecoration.lineThrough
                                                             : TextDecoration.none,
