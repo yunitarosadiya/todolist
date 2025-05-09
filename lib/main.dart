@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'todopage.dart';
+import 'splashscreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         )
       ),
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: TodoPage(onToggleTheme: toggleTheme),
+      home: SplashScreen(onToggleTheme: toggleTheme),
     );
   }
 }
