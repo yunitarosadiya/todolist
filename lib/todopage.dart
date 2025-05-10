@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'about_page.dart';
 
 class TodoPage extends StatefulWidget {
     final VoidCallback onToggleTheme;
@@ -185,6 +186,16 @@ class _TodoPageState extends State<TodoPage> {
                     IconButton(
                         icon: const Icon(Icons.brightness_6),
                         onPressed: widget.onToggleTheme,
+                    ),
+
+                    IconButton(
+                        icon: const Icon(Icons.info_outline),
+                        onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const AboutPage()),
+                            );
+                        },
                     ),
                 ],
             ),
